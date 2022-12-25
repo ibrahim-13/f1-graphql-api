@@ -38,6 +38,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	Query() QueryResolver
+	Race() RaceResolver
 }
 
 type DirectiveRoot struct {
@@ -67,6 +68,9 @@ type ComplexityRoot struct {
 
 type QueryResolver interface {
 	Races(ctx context.Context) ([]*model.Race, error)
+}
+type RaceResolver interface {
+	Events(ctx context.Context, obj *model.Race) ([]*model.RaceEvent, error)
 }
 
 type executableSchema struct {
@@ -706,7 +710,7 @@ func (ec *executionContext) _Race_events(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Events, nil
+		return ec.resolvers.Race().Events(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -724,8 +728,8 @@ func (ec *executionContext) fieldContext_Race_events(ctx context.Context, field 
 	fc = &graphql.FieldContext{
 		Object:     "Race",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "url":
@@ -2780,40 +2784,53 @@ func (ec *executionContext) _Race(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Race_url(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "name":
 
 			out.Values[i] = ec._Race_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "descriptin":
 
 			out.Values[i] = ec._Race_descriptin(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "start":
 
 			out.Values[i] = ec._Race_start(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "end":
 
 			out.Values[i] = ec._Race_end(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "events":
+			field := field
 
-			out.Values[i] = ec._Race_events(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Race_events(ctx, field, obj)
+				return res
+			}
 
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

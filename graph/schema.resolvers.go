@@ -7,15 +7,26 @@ package graph
 import (
 	"context"
 	"f1api/graph/model"
-	"fmt"
+	"log"
 )
 
 // Races is the resolver for the races field.
 func (r *queryResolver) Races(ctx context.Context) ([]*model.Race, error) {
-	panic(fmt.Errorf("not implemented: Races - races"))
+	log.Println("Resolver : Race")
+	return []*model.Race{{URL: "url", Name: ""}}, nil
+}
+
+// Events is the resolver for the events field.
+func (r *raceResolver) Events(ctx context.Context, obj *model.Race) ([]*model.RaceEvent, error) {
+	log.Println("Resolver : RaceEvent")
+	return []*model.RaceEvent{{URL: "url"}}, nil
 }
 
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+// Race returns RaceResolver implementation.
+func (r *Resolver) Race() RaceResolver { return &raceResolver{r} }
+
 type queryResolver struct{ *Resolver }
+type raceResolver struct{ *Resolver }
