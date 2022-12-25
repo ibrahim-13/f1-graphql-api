@@ -22,8 +22,13 @@ go mod tidy
  - Run code generation
 
  ```sh
- go generate ./..
+# `resolver.go` contains the following comment at the top, which generates the code
+# //go:generate go run github.com/99designs/gqlgen generate
+go generate ./..
  ```
 
-`resolver.go` contains the following comment at the top, which generates the code -
->//go:generate go run github.com/99designs/gqlgen generate
+- Or run the generator
+
+```sh
+go run github.com/99designs/gqlgen generate
+```

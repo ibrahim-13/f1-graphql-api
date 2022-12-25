@@ -2,19 +2,18 @@
 
 package model
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Race struct {
+	URL        string       `json:"url"`
+	Name       string       `json:"name"`
+	Descriptin string       `json:"descriptin"`
+	Start      string       `json:"start"`
+	End        string       `json:"end"`
+	Events     []*RaceEvent `json:"events"`
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
-}
-
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type RaceEvent struct {
+	URL   string `json:"url"`
+	Name  string `json:"name"`
+	Start string `json:"start"`
+	End   string `json:"end"`
 }
