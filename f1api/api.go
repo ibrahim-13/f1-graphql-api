@@ -20,7 +20,7 @@ func NewF1Api() *F1Api {
 	return &F1Api{
 		year:              fmt.Sprint(time.Now().Year()),
 		apiRequestTimeout: 8 * time.Second,
-		cache:             NewResponseCache(24 * time.Hour),
+		cache:             NewResponseCache(6 * time.Hour),
 	}
 }
 
@@ -47,13 +47,13 @@ func (f1 *F1Api) GetRaceListByYear(year string) ([]Race, error) {
 	return r, nil
 }
 
-func (f1 *F1Api) GetRaceEventList(race Race) ([]RaceEventData, error) {
-	cached, err := f1.cache.GetRaceEvent(race.Url)
+func (f1 *F1Api) GetRaceEventList(raceUrl string) ([]RaceEventData, error) {
+	cached, err := f1.cache.GetRaceEvent(raceUrl)
 	if err == nil {
 		return cached, nil
 	}
 	ctx, _ := f1.getRequestCtx()
-	r, e := getLinkedData[RaceEventData](ctx, race.Url)
+	r, e := getLinkedData[RaceEventData](ctx, raceUrl)
 	if e != nil {
 		return nil, e
 	}
@@ -65,7 +65,7 @@ func (f1 *F1Api) GetRaceEventList(race Race) ([]RaceEventData, error) {
 			r[i].SubEvents[j].EndDateTime, _ = time.Parse(time.RFC3339, r[i].SubEvents[j].EndDate)
 		}
 	}
-	f1.cache.SetRaceEvent(race.Url, r)
+	f1.cache.SetRaceEvent(raceUrl, r)
 	return r, nil
 }
 
