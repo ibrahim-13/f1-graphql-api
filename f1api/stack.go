@@ -1,4 +1,4 @@
-package parser
+package f1api
 
 import (
 	"errors"

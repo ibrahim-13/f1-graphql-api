@@ -1,7 +1,7 @@
 package main
 
 import (
-	"f1api/graph"
+	"f1-gql-api/graph"
 	"log"
 	"net/http"
 	"os"

@@ -1,8 +1,8 @@
-package parser
+package f1api
 
 import (
+	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -11,7 +11,6 @@ import (
 
 const (
 	__url_race_list string = "https://www.formula1.com/en/racing/%s.html"
-	__time_layout_1 string = "2006-01-02T15:04:05"
 )
 
 const ()
@@ -46,37 +45,12 @@ type RaceEventData struct {
 	SubEvents []RaceEvent `json:"subEvent"`
 }
 
-func GetRaceList(year string) ([]Race, error) {
-	r, e := getLinkedData[Race](fmt.Sprintf(__url_race_list, year))
-	if e != nil {
-		return nil, e
+func getLinkedData[K interface{}](ctx context.Context, url string) ([]K, error) {
+	request, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, err
 	}
-	for i := range r {
-		r[i].StartDateTime, _ = time.Parse(__time_layout_1, r[i].StartDate)
-		r[i].EndDateTime, _ = time.Parse(__time_layout_1, r[i].EndDate)
-	}
-	return r, nil
-}
-
-func (race Race) GetRaceEventList() ([]RaceEventData, error) {
-	r, e := getLinkedData[RaceEventData](race.Url)
-	if e != nil {
-		return nil, e
-	}
-	for i := range r {
-		r[i].StartDateTime, _ = time.Parse(time.RFC3339, r[i].StartDate)
-		r[i].EndDateTime, _ = time.Parse(time.RFC3339, r[i].EndDate)
-		for j := range r[i].SubEvents {
-			r[i].SubEvents[j].StartDateTime, _ = time.Parse(time.RFC3339, r[i].SubEvents[j].StartDate)
-			r[i].SubEvents[j].EndDateTime, _ = time.Parse(time.RFC3339, r[i].SubEvents[j].EndDate)
-		}
-	}
-
-	return r, nil
-}
-
-func getLinkedData[K interface{}](url string) ([]K, error) {
-	response, err := http.Get(url)
+	response, err := http.DefaultClient.Do(request)
 	if err != nil {
 		return nil, err
 	}

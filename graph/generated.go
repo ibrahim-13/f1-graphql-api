@@ -7,7 +7,7 @@ import (
 	"context"
 	"embed"
 	"errors"
-	"f1api/graph/model"
+	"f1-gql-api/graph/model"
 	"fmt"
 	"strconv"
 	"sync"
@@ -317,7 +317,7 @@ func (ec *executionContext) _Query_races(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.([]*model.Race)
 	fc.Result = res
-	return ec.marshalNRace2ᚕᚖf1apiᚋgraphᚋmodelᚐRaceᚄ(ctx, field.Selections, res)
+	return ec.marshalNRace2ᚕᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_races(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -721,7 +721,7 @@ func (ec *executionContext) _Race_events(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.([]*model.RaceEvent)
 	fc.Result = res
-	return ec.marshalORaceEvent2ᚕᚖf1apiᚋgraphᚋmodelᚐRaceEventᚄ(ctx, field.Selections, res)
+	return ec.marshalORaceEvent2ᚕᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceEventᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Race_events(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3239,7 +3239,7 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) marshalNRace2ᚕᚖf1apiᚋgraphᚋmodelᚐRaceᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Race) graphql.Marshaler {
+func (ec *executionContext) marshalNRace2ᚕᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Race) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -3263,7 +3263,7 @@ func (ec *executionContext) marshalNRace2ᚕᚖf1apiᚋgraphᚋmodelᚐRaceᚄ(c
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNRace2ᚖf1apiᚋgraphᚋmodelᚐRace(ctx, sel, v[i])
+			ret[i] = ec.marshalNRace2ᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRace(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3283,7 +3283,7 @@ func (ec *executionContext) marshalNRace2ᚕᚖf1apiᚋgraphᚋmodelᚐRaceᚄ(c
 	return ret
 }
 
-func (ec *executionContext) marshalNRace2ᚖf1apiᚋgraphᚋmodelᚐRace(ctx context.Context, sel ast.SelectionSet, v *model.Race) graphql.Marshaler {
+func (ec *executionContext) marshalNRace2ᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRace(ctx context.Context, sel ast.SelectionSet, v *model.Race) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -3293,7 +3293,7 @@ func (ec *executionContext) marshalNRace2ᚖf1apiᚋgraphᚋmodelᚐRace(ctx con
 	return ec._Race(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNRaceEvent2ᚖf1apiᚋgraphᚋmodelᚐRaceEvent(ctx context.Context, sel ast.SelectionSet, v *model.RaceEvent) graphql.Marshaler {
+func (ec *executionContext) marshalNRaceEvent2ᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceEvent(ctx context.Context, sel ast.SelectionSet, v *model.RaceEvent) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -3597,7 +3597,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalORaceEvent2ᚕᚖf1apiᚋgraphᚋmodelᚐRaceEventᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.RaceEvent) graphql.Marshaler {
+func (ec *executionContext) marshalORaceEvent2ᚕᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceEventᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.RaceEvent) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -3624,7 +3624,7 @@ func (ec *executionContext) marshalORaceEvent2ᚕᚖf1apiᚋgraphᚋmodelᚐRace
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNRaceEvent2ᚖf1apiᚋgraphᚋmodelᚐRaceEvent(ctx, sel, v[i])
+			ret[i] = ec.marshalNRaceEvent2ᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceEvent(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)

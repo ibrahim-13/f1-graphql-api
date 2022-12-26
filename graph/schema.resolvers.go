@@ -6,7 +6,7 @@ package graph
 
 import (
 	"context"
-	"f1api/graph/model"
+	"f1-gql-api/graph/model"
 	"log"
 )
 

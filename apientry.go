@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"time"
 
-	"f1api/parser"
+	"f1-gql-api/f1api"
 )
 
 func PrintEvents() {
-	races, err := parser.GetRaceList("2023")
+	api := f1api.NewF1Api()
+	races, err := api.GetRaceList("2023")
 	if err != nil {
 		panic(err)
 	} else {
 		if len(races) > 0 {
-			event, _ := races[0].GetRaceEventList()
+			event, _ := api.GetRaceEventList(races[0])
 			fmt.Println("Start Time", races[0].StartDateTime.Format(time.RFC3339))
 			fmt.Println("Events", len(event))
 		}

@@ -1,4 +1,4 @@
-module f1api
+module f1-gql-api
 
 go 1.19
 
