@@ -50,12 +50,12 @@ type ComplexityRoot struct {
 	}
 
 	Race struct {
-		Descriptin func(childComplexity int) int
-		End        func(childComplexity int) int
-		Events     func(childComplexity int) int
-		Name       func(childComplexity int) int
-		Start      func(childComplexity int) int
-		URL        func(childComplexity int) int
+		Description func(childComplexity int) int
+		End         func(childComplexity int) int
+		Events      func(childComplexity int) int
+		Name        func(childComplexity int) int
+		Start       func(childComplexity int) int
+		URL         func(childComplexity int) int
 	}
 
 	RaceEvent struct {
@@ -95,12 +95,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Races(childComplexity), true
 
-	case "Race.descriptin":
-		if e.complexity.Race.Descriptin == nil {
+	case "Race.description":
+		if e.complexity.Race.Description == nil {
 			break
 		}
 
-		return e.complexity.Race.Descriptin(childComplexity), true
+		return e.complexity.Race.Description(childComplexity), true
 
 	case "Race.end":
 		if e.complexity.Race.End == nil {
@@ -332,8 +332,8 @@ func (ec *executionContext) fieldContext_Query_races(ctx context.Context, field 
 				return ec.fieldContext_Race_url(ctx, field)
 			case "name":
 				return ec.fieldContext_Race_name(ctx, field)
-			case "descriptin":
-				return ec.fieldContext_Race_descriptin(ctx, field)
+			case "description":
+				return ec.fieldContext_Race_description(ctx, field)
 			case "start":
 				return ec.fieldContext_Race_start(ctx, field)
 			case "end":
@@ -564,8 +564,8 @@ func (ec *executionContext) fieldContext_Race_name(ctx context.Context, field gr
 	return fc, nil
 }
 
-func (ec *executionContext) _Race_descriptin(ctx context.Context, field graphql.CollectedField, obj *model.Race) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Race_descriptin(ctx, field)
+func (ec *executionContext) _Race_description(ctx context.Context, field graphql.CollectedField, obj *model.Race) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Race_description(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -578,7 +578,7 @@ func (ec *executionContext) _Race_descriptin(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Descriptin, nil
+		return obj.Description, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -595,7 +595,7 @@ func (ec *executionContext) _Race_descriptin(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Race_descriptin(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Race_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Race",
 		Field:      field,
@@ -2793,9 +2793,9 @@ func (ec *executionContext) _Race(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "descriptin":
+		case "description":
 
-			out.Values[i] = ec._Race_descriptin(ctx, field, obj)
+			out.Values[i] = ec._Race_description(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)

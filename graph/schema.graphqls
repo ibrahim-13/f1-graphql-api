@@ -5,7 +5,7 @@
 type Race {
   url: ID!
   name: String!
-  descriptin: String!
+  description: String!
   start: String!
   end: String!
   events: [RaceEvent!]

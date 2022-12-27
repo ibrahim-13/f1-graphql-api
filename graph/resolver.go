@@ -28,11 +28,11 @@ func (resolver *Resolver) GetRaces() ([]*model.Race, error) {
 	var races []*model.Race
 	for i := range r {
 		races = append(races, &model.Race{
-			URL:        r[i].Url,
-			Name:       r[i].Name,
-			Descriptin: r[i].Description,
-			Start:      r[i].StartDateTime.Format(time.RFC3339),
-			End:        r[i].EndDateTime.Format(time.RFC3339),
+			URL:         r[i].Url,
+			Name:        r[i].Name,
+			Description: r[i].Description,
+			Start:       r[i].StartDateTime.Format(time.RFC3339),
+			End:         r[i].EndDateTime.Format(time.RFC3339),
 		})
 	}
 	return races, nil

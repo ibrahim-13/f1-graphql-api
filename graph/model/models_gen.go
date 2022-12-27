@@ -3,12 +3,12 @@
 package model
 
 type Race struct {
-	URL        string       `json:"url"`
-	Name       string       `json:"name"`
-	Descriptin string       `json:"descriptin"`
-	Start      string       `json:"start"`
-	End        string       `json:"end"`
-	Events     []*RaceEvent `json:"events"`
+	URL         string       `json:"url"`
+	Name        string       `json:"name"`
+	Description string       `json:"description"`
+	Start       string       `json:"start"`
+	End         string       `json:"end"`
+	Events      []*RaceEvent `json:"events"`
 }
 
 type RaceEvent struct {
