@@ -26,8 +26,25 @@ func (resolver *Resolver) GetRaces(filter *model.RaceFilter) ([]*model.Race, err
 		return nil, err
 	}
 	var races []*model.Race
-	for i := range r {
-		races = append(races, mapToRace(r[i]))
+	currentTime := time.Now()
+	switch *filter {
+	case model.RaceFilterAllNextRace:
+		for i := range r {
+			if r[i].StartDateTime.After(currentTime) {
+				races = append(races, mapToRace(r[i]))
+			}
+		}
+	case model.RaceFilterAllRace:
+		for i := range r {
+			races = append(races, mapToRace(r[i]))
+		}
+	case model.RaceFilterOnlyNextRace:
+		for i := range r {
+			if r[i].StartDateTime.After(currentTime) {
+				races = append(races, mapToRace(r[i]))
+				break
+			}
+		}
 	}
 	return races, nil
 }

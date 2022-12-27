@@ -7,12 +7,10 @@ package graph
 import (
 	"context"
 	"f1-gql-api/graph/model"
-	"log"
 )
 
 // Races is the resolver for the races field.
 func (r *queryResolver) Races(ctx context.Context, filter *model.RaceFilter) ([]*model.Race, error) {
-	log.Println("Filter", filter)
 	return r.GetRaces(filter)
 }
 

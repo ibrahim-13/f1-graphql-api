@@ -3,6 +3,7 @@ package f1api
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -63,10 +64,19 @@ func (f1 *F1Api) GetRaceEventList(raceUrl string) ([]RaceEventData, error) {
 		for j := range r[i].SubEvents {
 			r[i].SubEvents[j].StartDateTime, _ = time.Parse(time.RFC3339, r[i].SubEvents[j].StartDate)
 			r[i].SubEvents[j].EndDateTime, _ = time.Parse(time.RFC3339, r[i].SubEvents[j].EndDate)
+			r[i].SubEvents[j].Name = f1.getSubEventName(r[i].SubEvents[j].Name)
 		}
 	}
 	f1.cache.SetRaceEvent(raceUrl, r)
 	return r, nil
+}
+
+func (f1 *F1Api) getSubEventName(name string) string {
+	s := strings.Split(name, "-")
+	if len(s) > 1 {
+		return strings.TrimSpace(s[0])
+	}
+	return name
 }
 
 func (f1 *F1Api) getRequestCtx() (context.Context, context.CancelFunc) {
