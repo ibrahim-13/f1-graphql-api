@@ -20,20 +20,14 @@ func NewResolver() *Resolver {
 	return &Resolver{Api: f1api.NewF1Api()}
 }
 
-func (resolver *Resolver) GetRaces() ([]*model.Race, error) {
+func (resolver *Resolver) GetRaces(filter *model.RaceFilter) ([]*model.Race, error) {
 	r, err := resolver.Api.GetRaceListByYear("2023")
 	if err != nil {
 		return nil, err
 	}
 	var races []*model.Race
 	for i := range r {
-		races = append(races, &model.Race{
-			URL:         r[i].Url,
-			Name:        r[i].Name,
-			Description: r[i].Description,
-			Start:       r[i].StartDateTime.Format(time.RFC3339),
-			End:         r[i].EndDateTime.Format(time.RFC3339),
-		})
+		races = append(races, mapToRace(r[i]))
 	}
 	return races, nil
 }

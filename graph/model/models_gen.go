@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type Race struct {
 	URL         string       `json:"url"`
 	Name        string       `json:"name"`
@@ -16,4 +22,47 @@ type RaceEvent struct {
 	Name  string `json:"name"`
 	Start string `json:"start"`
 	End   string `json:"end"`
+}
+
+type RaceFilter string
+
+const (
+	RaceFilterOnlyNextRace RaceFilter = "ONLY_NEXT_RACE"
+	RaceFilterAllNextRace  RaceFilter = "ALL_NEXT_RACE"
+	RaceFilterAllRace      RaceFilter = "ALL_RACE"
+)
+
+var AllRaceFilter = []RaceFilter{
+	RaceFilterOnlyNextRace,
+	RaceFilterAllNextRace,
+	RaceFilterAllRace,
+}
+
+func (e RaceFilter) IsValid() bool {
+	switch e {
+	case RaceFilterOnlyNextRace, RaceFilterAllNextRace, RaceFilterAllRace:
+		return true
+	}
+	return false
+}
+
+func (e RaceFilter) String() string {
+	return string(e)
+}
+
+func (e *RaceFilter) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = RaceFilter(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid RACE_FILTER", str)
+	}
+	return nil
+}
+
+func (e RaceFilter) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

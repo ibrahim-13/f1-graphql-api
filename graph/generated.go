@@ -46,7 +46,7 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Query struct {
-		Races func(childComplexity int) int
+		Races func(childComplexity int, filter *model.RaceFilter) int
 	}
 
 	Race struct {
@@ -67,7 +67,7 @@ type ComplexityRoot struct {
 }
 
 type QueryResolver interface {
-	Races(ctx context.Context) ([]*model.Race, error)
+	Races(ctx context.Context, filter *model.RaceFilter) ([]*model.Race, error)
 }
 type RaceResolver interface {
 	Events(ctx context.Context, obj *model.Race) ([]*model.RaceEvent, error)
@@ -93,7 +93,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.Races(childComplexity), true
+		args, err := ec.field_Query_races_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Races(childComplexity, args["filter"].(*model.RaceFilter)), true
 
 	case "Race.description":
 		if e.complexity.Race.Description == nil {
@@ -251,6 +256,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_races_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.RaceFilter
+	if tmp, ok := rawArgs["filter"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filter"))
+		arg0, err = ec.unmarshalORACE_FILTER2ᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceFilter(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["filter"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field___Type_enumValues_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -303,7 +323,7 @@ func (ec *executionContext) _Query_races(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Races(rctx)
+		return ec.resolvers.Query().Races(rctx, fc.Args["filter"].(*model.RaceFilter))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -343,6 +363,17 @@ func (ec *executionContext) fieldContext_Query_races(ctx context.Context, field 
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Race", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_races_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
 	}
 	return fc, nil
 }
@@ -3595,6 +3626,22 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) unmarshalORACE_FILTER2ᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceFilter(ctx context.Context, v interface{}) (*model.RaceFilter, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.RaceFilter)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalORACE_FILTER2ᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceFilter(ctx context.Context, sel ast.SelectionSet, v *model.RaceFilter) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalORaceEvent2ᚕᚖf1ᚑgqlᚑapiᚋgraphᚋmodelᚐRaceEventᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.RaceEvent) graphql.Marshaler {

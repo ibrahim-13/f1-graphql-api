@@ -2,6 +2,12 @@
 #
 # https://gqlgen.com/getting-started/
 
+enum RACE_FILTER {
+  ONLY_NEXT_RACE
+  ALL_NEXT_RACE
+  ALL_RACE
+}
+
 type Race {
   url: ID!
   name: String!
@@ -19,5 +25,5 @@ type RaceEvent {
 }
 
 type Query {
-  races: [Race!]!
+  races(filter: RACE_FILTER = ONLY_NEXT_RACE): [Race!]!
 }
