@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"golang.org/x/net/html"
@@ -101,4 +102,29 @@ func isLinkedDataTag(node *html.Node) bool {
 
 func isHeadTag(node *html.Node) bool {
 	return node.Type == html.ElementNode && node.Data == "head"
+}
+
+func (r *Race) UpdateNameAndDescription() {
+	p1 := strings.Split(r.Url, "/")
+	page := p1[len(p1)-1]
+	np := strings.Split(page, ".")
+	name := np[0]
+	var sb strings.Builder
+	var last byte = 0
+	for i := range name {
+		if name[i] == '_' {
+			sb.WriteRune(' ')
+			last = ' '
+		} else if name[i] >= 'A' && name[i] <= 'Z' && i > 0 && last != ' ' {
+			sb.WriteRune(' ')
+			sb.WriteByte(name[i])
+			last = name[i]
+		} else {
+			sb.WriteByte(name[i])
+			last = name[i]
+		}
+	}
+	name = sb.String()
+	r.Name = name
+	r.Description = name + " Grand Prix"
 }

@@ -43,6 +43,7 @@ func (f1 *F1Api) GetRaceListByYear(year string) ([]Race, error) {
 	for i := range r {
 		r[i].StartDateTime, _ = time.Parse(__time_layout_1, r[i].StartDate)
 		r[i].EndDateTime, _ = time.Parse(__time_layout_1, r[i].EndDate)
+		r[i].UpdateNameAndDescription()
 	}
 	f1.cache.SetRace(url, r)
 	return r, nil
