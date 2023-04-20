@@ -13,25 +13,33 @@ type cacheData[K interface{}] struct {
 	data []K
 }
 
-type ResponseCache struct {
+type ApiCacheLocal struct {
 	retentionTime  time.Duration
 	cacheRace      map[string]cacheData[Race]
 	cacheRaceEvent map[string]cacheData[RaceEventData]
 }
 
-func NewResponseCache(retentionTime time.Duration) *ResponseCache {
-	return &ResponseCache{
+func NewApiCacheLocal(retentionTime time.Duration) *ApiCacheLocal {
+	return &ApiCacheLocal{
 		retentionTime:  retentionTime,
 		cacheRace:      map[string]cacheData[Race]{},
 		cacheRaceEvent: map[string]cacheData[RaceEventData]{},
 	}
 }
 
-func (c *ResponseCache) SetRace(url string, race []Race) {
+func (c *ApiCacheLocal) GetRetentionTime() time.Duration {
+	return c.retentionTime
+}
+
+func (c *ApiCacheLocal) SetRetentionTime(retentionTime time.Duration) {
+	c.retentionTime = retentionTime
+}
+
+func (c *ApiCacheLocal) SetRace(url string, race []Race) {
 	c.cacheRace[url] = cacheData[Race]{time: time.Now(), data: race}
 }
 
-func (c *ResponseCache) GetRace(url string) ([]Race, error) {
+func (c *ApiCacheLocal) GetRace(url string) ([]Race, error) {
 	data, ok := c.cacheRace[url]
 	if !ok {
 		return nil, ErrCacheNotFount
@@ -42,11 +50,11 @@ func (c *ResponseCache) GetRace(url string) ([]Race, error) {
 	return data.data, nil
 }
 
-func (c *ResponseCache) SetRaceEvent(url string, event []RaceEventData) {
+func (c *ApiCacheLocal) SetRaceEvent(url string, event []RaceEventData) {
 	c.cacheRaceEvent[url] = cacheData[RaceEventData]{time: time.Now(), data: event}
 }
 
-func (c *ResponseCache) GetRaceEvent(url string) ([]RaceEventData, error) {
+func (c *ApiCacheLocal) GetRaceEvent(url string) ([]RaceEventData, error) {
 	data, ok := c.cacheRaceEvent[url]
 	if !ok {
 		return nil, ErrCacheNotFount

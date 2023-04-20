@@ -11,17 +11,26 @@ const (
 	__time_layout_1 string = "2006-01-02T15:04:05"
 )
 
+type ApiCache interface {
+	GetRetentionTime() time.Duration
+	SetRetentionTime(time.Duration)
+	SetRace(string, []Race)
+	GetRace(string) ([]Race, error)
+	SetRaceEvent(string, []RaceEventData)
+	GetRaceEvent(string) ([]RaceEventData, error)
+}
+
 type F1Api struct {
 	year              string
 	apiRequestTimeout time.Duration
-	cache             *ResponseCache
+	cache             ApiCache
 }
 
-func NewF1Api() *F1Api {
+func NewF1Api(year string, cache ApiCache) *F1Api {
 	return &F1Api{
-		year:              fmt.Sprint(time.Now().Year()),
+		year:              year,
 		apiRequestTimeout: 8 * time.Second,
-		cache:             NewResponseCache(6 * time.Hour),
+		cache:             cache,
 	}
 }
 

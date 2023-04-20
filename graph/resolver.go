@@ -5,6 +5,7 @@ package graph
 import (
 	"f1-gql-api/f1api"
 	"f1-gql-api/graph/model"
+	"fmt"
 	"time"
 )
 
@@ -17,7 +18,8 @@ type Resolver struct {
 }
 
 func NewResolver() *Resolver {
-	return &Resolver{Api: f1api.NewF1Api()}
+	year, cache := fmt.Sprint(time.Now().Year()), f1api.NewApiCacheLocal(6*time.Hour)
+	return &Resolver{Api: f1api.NewF1Api(year, cache)}
 }
 
 func (resolver *Resolver) GetRaces(filter *model.RaceFilter) ([]*model.Race, error) {
