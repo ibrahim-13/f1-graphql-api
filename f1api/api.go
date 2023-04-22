@@ -3,6 +3,7 @@ package f1api
 import (
 	"context"
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 )
@@ -34,8 +35,12 @@ func NewF1Api(year string, cache ApiCache) *F1Api {
 	}
 }
 
-func (ctx *F1Api) GetRaceList(year string) ([]Race, error) {
+func (ctx *F1Api) GetRaceList() ([]Race, error) {
 	return ctx.GetRaceListByYear(ctx.year)
+}
+
+func (ctx *F1Api) GetYear() string {
+	return ctx.year
 }
 
 func (f1 *F1Api) GetRaceListByYear(year string) ([]Race, error) {
@@ -76,6 +81,9 @@ func (f1 *F1Api) GetRaceEventList(raceUrl string) ([]RaceEventData, error) {
 			r[i].SubEvents[j].EndDateTime, _ = time.Parse(time.RFC3339, r[i].SubEvents[j].EndDate)
 			r[i].SubEvents[j].Name = f1.getSubEventName(r[i].SubEvents[j].Name)
 		}
+		sort.Slice(r[i].SubEvents, func(k, l int) bool {
+			return r[i].SubEvents[k].StartDateTime.Before(r[i].SubEvents[l].StartDateTime)
+		})
 	}
 	f1.cache.SetRaceEvent(raceUrl, r)
 	return r, nil
