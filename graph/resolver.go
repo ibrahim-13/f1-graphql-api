@@ -23,7 +23,7 @@ func NewResolver() *Resolver {
 }
 
 func (resolver *Resolver) GetRaces(filter *model.RaceFilter) ([]*model.Race, error) {
-	r, err := resolver.Api.GetRaceListByYear("2023")
+	r, err := resolver.Api.GetRaceList()
 	if err != nil {
 		return nil, err
 	}
